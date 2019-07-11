@@ -27,9 +27,9 @@ PER_MAP_COLUMNS = ["kills_per_map", "deaths_per_map", "plants_per_map",
                    "defuses_per_map", "top_fragger_per_map", "zero_bomb_per_map"]
 
 
-def find_misspellings(s: str):
+def find_misspellings(s: str, include_bradlx888_as_ntsfbrad=True):
     s = mwrvr.misc.find_jaantr(s)
-    s = mwrvr.misc.find_ntsfbrad(s)
+    s = mwrvr.misc.find_ntsfbrad(s, include_bradlx888=include_bradlx888_as_ntsfbrad)
     s = mwrvr.misc.find_jakeyy(s)
     s = mwrvr.misc.find_jordanx267(s)
     s = mwrvr.misc.find_bennettar95(s)
@@ -41,10 +41,14 @@ def find_misspellings(s: str):
 @click.option("--json-directory", default=None)
 @click.option("--output-path", default=None)
 @click.option("--group/--dont-group", default=False)
+@click.option("--group-by", default=["name"])
 @click.option("--per-map/--no-per-map", default=False)
 @click.option("--only-team-members/--not-only-team-members", default=False)
+@click.option("--include-bradlx888-as-ntsfbrad/--dont-include-bradlx888-as-ntsfbrad",
+              default=True)
 @click.option("--debug/--no-debug", default=False)
-def parse_json(json_directory, output_path, group, per_map, only_team_members, debug):
+def parse_json(json_directory, output_path, group, group_by, per_map, only_team_members,
+               include_bradlx888_as_ntsfbrad, debug):
     if debug:
         logger.info("Debug mode")
         logger.info("If you inputted a video-directory, it will be ignored!")
@@ -55,17 +59,17 @@ def parse_json(json_directory, output_path, group, per_map, only_team_members, d
         json_directory = "./*.json"
 
     else:
-        json_directory = os.path.join(json_directory, "/*.json")
+        json_directory = os.path.join(json_directory, "*.json")
 
     json_paths = glob.glob(json_directory)
     # "/Users/bgrantham/Repos/mwr-video-reader/data/textract-results/all/*.json"
 
-    df = read_json_files(json_paths)
+    df = read_json_files(json_paths, include_bradlx888_as_ntsfbrad=include_bradlx888_as_ntsfbrad)
 
     df[INT_COLUMNS] = df[INT_COLUMNS].astype(np.int32)
 
     if group:
-        df = group_data(df)
+        df = group_data(df, by=group_by)
 
     if per_map:
         df = add_per_map(df)
@@ -78,7 +82,7 @@ def parse_json(json_directory, output_path, group, per_map, only_team_members, d
     df.to_csv(output_path)
 
 
-def read_json_files(json_paths):
+def read_json_files(json_paths, include_bradlx888_as_ntsfbrad=True):
     dfs = []
     for json_path in json_paths:
         with open(json_path) as f:
@@ -98,7 +102,8 @@ def read_json_files(json_paths):
         dfs.append(df)
     df = pd.concat(dfs, sort=False)
 
-    df["name"] = df["name"].apply(find_misspellings)
+    df["name"] = df["name"].apply(find_misspellings,
+                                  include_bradlx888_as_ntsfbrad=include_bradlx888_as_ntsfbrad)
 
     # a number of games column to act as a count when we do our groupby
     df["number_of_maps"] = 1

@@ -25,9 +25,13 @@ def find_bennettar95(s: str):
         return s
 
 
-def find_ntsfbrad(s: str):
+def find_ntsfbrad(s: str, include_bradlx888=True):
     if "ntsfbrad" in s.lower():
         return "ntsfbrad"
+    elif "bradbx888" in s.lower() and include_bradlx888:
+        return "ntsfbrad"
+    elif "bradbx8:88" in s.lower() and include_bradlx888:
+        return "nstbrad"
     else:
         return s
 
