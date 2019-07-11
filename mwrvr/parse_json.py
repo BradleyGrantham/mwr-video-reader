@@ -24,7 +24,7 @@ COLUMNS = ["name", "map", "score", "kills", "deaths", "plants", "defuses",
                   "number_of_maps", "top_fragger", "zero_bomb"]
 
 PER_MAP_COLUMNS = ["kills_per_map", "deaths_per_map", "plants_per_map",
-                   "defuses_per_map", "top_fragger_per_map", "zero_bomb_per_map"]
+                   "defuses_per_map", "top_fragger_per_map", "zero_bomb_per_map", "score_per_map"]
 
 
 def find_misspellings(s: str, include_bradlx888_as_ntsfbrad=True):
@@ -41,8 +41,8 @@ def find_misspellings(s: str, include_bradlx888_as_ntsfbrad=True):
 @click.option("--json-directory", default=None)
 @click.option("--output-path", default=None)
 @click.option("--group/--dont-group", default=False)
-@click.option("--group-by", default=["name"])
-@click.option("--per-map/--no-per-map", default=False)
+@click.option("--group-by", default=["name", "map"])
+@click.option("--per-map/--no-per-map", default=True)
 @click.option("--only-team-members/--not-only-team-members", default=False)
 @click.option("--include-bradlx888-as-ntsfbrad/--dont-include-bradlx888-as-ntsfbrad",
               default=True)
