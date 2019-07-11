@@ -48,3 +48,5 @@ MWR_MAPS = ["AMBUSH",
             "WINTER CRASH",
             "BEACH BOG"
             ]
+
+TEAM_MEMBERS = ["ntsfbrad", "Jordanx267", "LazyJakeyy", "bennettar95", "JaAnTr"]
